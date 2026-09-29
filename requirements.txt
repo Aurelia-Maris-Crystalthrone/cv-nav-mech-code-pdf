@@ -1,0 +1,6 @@
+# 运行时依赖（Python 3.9+）
+# 安装：pip install -r requirements.txt
+pymupdf>=1.24
+markdown>=3.5
+pygments>=2.17
+xhtml2pdf>=0.2.11

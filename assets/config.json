@@ -1,0 +1,38 @@
+{
+  "page": {
+    "size": "A4",
+    "margin_cm": {
+      "top": 2.0,
+      "bottom": 2.0,
+      "left": 2.2,
+      "right": 2.2
+    }
+  },
+  "fonts": {
+    "cjk": "assets/fonts/NotoSansSC-Regular.ttf",
+    "cjk_bold": "assets/fonts/NotoSansSC-Regular.ttf",
+    "mono": "assets/fonts/DejaVuSansMono.ttf",
+    "cjk_family": "NotoSansSC",
+    "mono_family": "MonoCode"
+  },
+  "typography": {
+    "body_size": "10.5pt",
+    "h1_size": "18pt",
+    "h2_size": "14pt",
+    "h3_size": "12pt",
+    "code_size": "8.5pt",
+    "line_height": 1.6
+  },
+  "highlight": {
+    "theme": "default",
+    "noclasses": true
+  },
+  "header": {
+    "enabled": false,
+    "text": ""
+  },
+  "footer": {
+    "enabled": true,
+    "text": "cv-nav-mech-code-pdf v{{version}}"
+  }
+}
