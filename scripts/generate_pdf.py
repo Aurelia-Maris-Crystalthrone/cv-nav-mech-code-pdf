@@ -273,6 +273,31 @@ def render_template(template_html: str, body_html: str, css: str,
     return html
 
 
+def _font_resource_policy(skill_root: Path):
+    """让 xhtml2pdf 能读取 skill 自带字体，同时保留其资源沙箱。
+
+    xhtml2pdf 0.2.16 起引入 ResourceAccessPolicy：文档只能读取 base_dir
+    （本脚本传入的是 HTML 字符串，故base_dir = 当前工作目录）之内的本地文件。
+    字体在 assets/fonts/ 下，默认会被拦截并静默回退到 Helvetica，
+    表现为 PDF 里所有中文变成实心黑块。
+
+    这里用 extra_roots 把 skill 根目录加为允许根——只放开这一个目录，
+    不用 allow_local_outside_base 全盘放开。旧版 xhtml2pdf 没有该模块，
+    此时返回空上下文，行为与原来一致。
+    """
+    try:
+        from xhtml2pdf.config.resources import (
+            ResourceAccessPolicy,
+            use_policy,
+        )
+    except ImportError:
+        from contextlib import nullcontext
+        return nullcontext()
+    return use_policy(
+        ResourceAccessPolicy(base_dir=Path.cwd(), extra_roots=(Path(skill_root),))
+    )
+
+
 def main():
     ap = argparse.ArgumentParser(
         description="Markdown 报告 → PDF（中文字体 + Pygments 高亮）")
@@ -344,7 +369,8 @@ def main():
     try:
         from xhtml2pdf import pisa
         with open(pdf_path, "wb") as fh:
-            status = pisa.CreatePDF(html, dest=fh, encoding="utf-8")
+            with _font_resource_policy(skill_root):
+                status = pisa.CreatePDF(html, dest=fh, encoding="utf-8")
         if status.err:
             raise RuntimeError(f"xhtml2pdf 报告 {status.err} 处错误")
         print(json.dumps({
